@@ -4,6 +4,10 @@ FILENAME=$(date +"%Y%m%d_%H%M")
 #Executed by Crontab 30min before sunrise
 #Records 30 min of audio, converts to MP3, deletes .wav file, uploads to AWS, deletes WAV after sucessful upload, goes on low power mode
 
+#usb on
+
+#mount usb drive
+
 #Loads audio device
 Export AudioREV=hw:1,0
 
@@ -16,10 +20,13 @@ lame -b 64 ./home/pi/Audio/Wav/${FILENAME}.wav ./home/pi/Audio/upload/${FILENAME
 #deletes .wav file
 rm /home/pi/Audio/wav/${FILENAME}.WAV
 
-NOTIFY_EMAIL=ryanomeara64@gmail.com
-MODTIME=$(stat -c %y .home/pi/Audio/upload/${FILENAME}.mp3)
-DATE=$(date --date="${MODTIME}" +%Y-%m-%d)
+#cellular on
 
 #upload to s3
 s3cmd put --reduced-redundancy --acl-public ./home/pi/Audio/upload/${FILENAME}.mp3 s3://MY_S3_BUCKET/${FILENAME}.mp3
 
+#cellular off
+
+#unmount usb drive
+
+#usb off
