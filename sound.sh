@@ -15,10 +15,10 @@ Export AudioREV=hw:1,0
 rec -c 1 -r 44800 -b 16 /home/pi/Audio/Wav/${FILENAME}.wav bandpass 720 600 highpass 120 gain 20 trim 2 1802
 
 #converts from .wav to .mp3
-lame -b 64 ./home/pi/Audio/Wav/${FILENAME}.wav ./home/pi/Audio/upload/${FILENAME}.mp3
+lame -b 64 ./home/pi/Audio/Wav/${FILENAME}.wav ./home/pi/Audio/Upload/${FILENAME}.mp3
 
 #deletes .wav file
-rm /home/pi/Audio/wav/${FILENAME}.WAV
+rm /home/pi/Audio/Wav/${FILENAME}.WAV
 
 #moves mp3 from SD card to usb drive
 mv
@@ -26,7 +26,7 @@ mv
 #cellular on
 
 #upload to s3 (need to update file paths)
-s3cmd put --reduced-redundancy --acl-public ./home/pi/Audio/upload/${FILENAME}.mp3 s3://MY_S3_BUCKET/${FILENAME}.mp3
+s3cmd put --reduced-redundancy --acl-public ./home/pi/Audio/Upload/${FILENAME}.mp3 s3://MY_S3_BUCKET/${FILENAME}.mp3
 
 #cellular off
 
