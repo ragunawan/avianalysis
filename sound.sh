@@ -26,7 +26,7 @@ mv
 #cellular on
 
 #upload to s3 (need to update file paths)
-s3cmd put --reduced-redundancy --acl-public ./home/pi/Audio/Upload/${FILENAME}.mp3 s3://MY_S3_BUCKET/${FILENAME}.mp3
+s3cmd put --reduced-redundancy --acl-public ./home/pi/Audio/Upload/${FILENAME}.mp3 s3://soundscocoa/${FILENAME}.mp3
 
 #cellular off
 
