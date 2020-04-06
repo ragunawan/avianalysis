@@ -10,6 +10,7 @@ FILENAME=$(date +"%Y%m%d_%H%M")
 
 #Loads audio device
 Export AudioREV=hw:1,0
+sudo ./Record_from_Linein_Micbias.sh
 
 #Records 30 min of audio
 rec -c 1 -r 44800 -b 16 /home/pi/Audio/Wav/${FILENAME}.wav bandpass 720 600 highpass 120 gain 20 trim 2 1802
@@ -24,6 +25,8 @@ rm /home/pi/Audio/Wav/${FILENAME}.WAV
 mv
 
 #cellular on
+cd ./files/quectel-CM
+sudo ./quectel-CM -s fast.t-mobile.com
 
 #upload to s3 (need to update file paths)
 s3cmd put --reduced-redundancy --acl-public ./home/pi/Audio/Upload/${FILENAME}.mp3 s3://soundscocoa/${FILENAME}.mp3
