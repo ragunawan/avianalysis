@@ -21,9 +21,6 @@ lame -b 64 ./home/pi/Audio/Wav/${FILENAME}.wav ./home/pi/Audio/Upload/${FILENAME
 #deletes .wav file
 rm /home/pi/Audio/Wav/${FILENAME}.WAV
 
-#moves mp3 from SD card to usb drive
-mv
-
 #cellular on
 cd ./files/quectel-CM
 sudo ./quectel-CM -s fast.t-mobile.com
@@ -33,6 +30,7 @@ s3cmd put --reduced-redundancy --acl-public ./home/pi/Audio/Upload/${FILENAME}.m
 
 #cellular off
 
-#unmount usb drive
+#moves mp3 from insternal storage to usb drive
+mv ./home/pi/Audio/Upload/${FILENAME}.mp3 ./media/usb0
 
-#usb off
+end
