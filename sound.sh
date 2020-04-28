@@ -4,10 +4,6 @@ FILENAME=$(date +"%Y%m%d_%H%M")
 #Executed by Crontab 30min before sunrise
 #Records 30 min of audio, converts to MP3, deletes .wav file, uploads to AWS, deletes WAV after sucessful upload, goes on low power mode
 
-#usb on
-
-#mount usb drive
-
 #Loads audio device
 Export AudioREV=hw:1,0
 sudo ./Record_from_Linein_Micbias.sh
@@ -19,18 +15,18 @@ rec -c 1 -r 44800 -b 16 /home/pi/Audio/Wav/${FILENAME}.wav bandpass 720 600 high
 lame -b 64 ./home/pi/Audio/Wav/${FILENAME}.wav ./home/pi/Audio/Upload/${FILENAME}.mp3
 
 #deletes .wav file
-rm /home/pi/Audio/Wav/${FILENAME}.WAV
+sudo rm /home/pi/Audio/Wav/${FILENAME}.WAV
 
 #cellular on
 cd ./files/quectel-CM
 sudo ./quectel-CM -s fast.t-mobile.com
 
 #upload to s3 (need to update file paths)
-s3cmd put --reduced-redundancy --acl-public ./home/pi/Audio/Upload/${FILENAME}.mp3 s3://soundscocoa/${FILENAME}.mp3
+sudo s3cmd put --reduced-redundancy --acl-public ./home/pi/Audio/Upload/${FILENAME}.mp3 s3://soundscocoa/${FILENAME}.mp3
 
 #cellular off
 
 #moves mp3 from insternal storage to usb drive
-mv ./home/pi/Audio/Upload/${FILENAME}.mp3 ./media/usb0
+sudo mv ./home/pi/Audio/Upload/${FILENAME}.mp3 ./media/usb0
 
 end
