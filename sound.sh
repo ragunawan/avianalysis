@@ -27,6 +27,6 @@ sudo s3cmd put --reduced-redundancy --acl-public ./home/pi/Audio/Upload/${FILENA
 #cellular off
 
 #moves mp3 from insternal storage to usb drive
-sudo mv ./home/pi/Audio/Upload/${FILENAME}.mp3 ./media/usb0
+sudo mv /home/pi/Audio/Upload/${FILENAME}.mp3 /media/usb0
 
 end
