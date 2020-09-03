@@ -11,7 +11,9 @@
 #if [$(crontab -l)  | grep "sound3.sh" != ]
 
 # crontab insertion for sound.sh script
-(crontab -l 2>/dev/null; echo "01 16 * * * /home/pi/sound4.sh") | crontab -
+echo "[status] adding sound4.sh to crontab..."
+(crontab -l 2>/dev/null; echo "01 16 * * * /home/pi/sound_log.sh") | crontab -
+echo "[status] crontab entry added."
 
 # crontab insertion for sunwait program execution - [CURRENTLY IN CRON]
 #(crontab -l 2>/dev/null; echo "05 00 * * * /usr/local/bin/sunwait sun up -0:15:00 28.3943N 80.7473W") | crontab -

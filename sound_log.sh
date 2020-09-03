@@ -14,59 +14,61 @@ echo "[status]: Called by crontab" >> $LOG
 #Records 30 min of audio, converts to MP3, deletes .wav file, uploads to AWS, deletes WAV after sucessful upload, goes on low power mode
 
 #Loads audio device
-echo "[status]: run 'sudo ./Record_from_Linein_Micbias.sh'" >> $LOG
+echo "[init]: run 'sudo ./Record_from_Linein_Micbias.sh'" >> $LOG
 sudo ./Record_from_Linein_Micbias.sh
-echo "[status]: cmd record finished" >> $LOG
+echo "[return]: cmd record finished" >> $LOG
 
-echo "[status]: set AUDIDEV variable" >> $LOG
+echo "[init]: set AUDIDEV variable" >> $LOG
 export AUDIDEV=hw:1,0
 
-echo "[status]: initiate record 30 minutes of audio" >> $LOG
+echo "[init]: initiate record 30 minutes of audio" >> $LOG
 #Records 30 min of audio
 rec -c 2 -r 44800 -b 16 /home/pi/Audio/Wav/${FILENAME}.wav bandpass 720 600 highpass 120 gain 20 trim 2 32
-echo "[status]: 30 minutes of audio finished recording" >> $LOG
+echo "[return]: 30 minutes of audio finished recording" >> $LOG
 
 #converts from .wav to .mp3
-echo "[status]: begin .wav to .mp3 conversion" >> $LOG
+echo "[init]: begin .wav to .mp3 conversion" >> $LOG
 sudo lame -b 64 /home/pi/Audio/Wav/${FILENAME}.wav /home/pi/Audio/Upload/${FILENAME}.mp3
-echo "[status]: conversion complete" >> $LOG
+echo "[return]: conversion complete" >> $LOG
 
 #deletes .wav file
-echo "[status]: attempt to delete .wav file" >> $LOG
+echo "[init]: attempt to delete .wav file" >> $LOG
 sudo rm /home/pi/Audio/Wav/${FILENAME}.wav
-echo "[status]: rm cmd completed" >> $LOG
+echo "[return]: rm cmd completed" >> $LOG
 
 #cellular on
-echo "[status] cd and turn cellular on" >> $LOG
+echo "[init] cd and turn cellular on" >> $LOG
 cd ./files/quectel-CM
 sudo ./quectel-CM -s fast.t-mobile.com &
-echo "[status] cellular cmd executed, and in background" >> $LOG
+echo "[return] cellular cmd executed, and in background" >> $LOG
 
-echo "[status] sleep for 10 count" >> $LOG
+echo "[init] sleep for 10 count" >> $LOG
 sleep 10
-echo "[status] sleep completed" >> $LOG
+echo "[return] sleep completed" >> $LOG
 
 #upload to s3 (need to update file paths)
-echo "[status] upload to s3" >> $LOG
+echo "[init] upload to s3" >> $LOG
 sudo s3cmd put --reduced-redundancy --acl-public /home/pi/Audio/Upload/${FILENAME}.mp3 s3://soundscocoa/${FILENAME}.mp3
-echo "[status] upload cmd complete" >> $LOG
+echo "[return] upload cmd complete" >> $LOG
 
 #cellular off
 echo "[status] turn cellular off" >> $LOG
-echo "[status] grep cellular process ID" >> $LOG
+echo "[init] grep cellular process ID" >> $LOG
 CELLULAR=$(pgrep quectel-CM)
-echo "cellular pid = $CELLULAR" >> $LOG
+echo "[return] cellular pid = $CELLULAR" >> $LOG
 
 sudo pgrep quectel-CM
 
-echo "[status] kill celular" >> $LOG
+echo "[init] kill celular" >> $LOG
 sudo kill -KILL $CELLULAR
-echo "[status] cellular off" >> $LOG
+echo "[return] cellular off" >> $LOG
 
 
 #moves mp3 from internal storage to usb drive
 echo "[status] move mp3 from internal storage to usb drive" >> $LOG
 sudo echo '1-1' | sudo tee /sys/bus/usb/drivers/usb/bind
+echo "[init] mv command from local storage to USB"
 sudo mv /home/pi/Audio/Upload/${FILENAME}.mp3 /media/usb0
-sudo echo '1-1' | sudo tee /sys/bus/usb/drivers/usb/unbind  
+sudo echo '1-1' | sudo tee /sys/bus/usb/drivers/usb/unbind
+echo "[return] file move complete" >> $LOG
 echo "[status] bash script complete" >> $LOG
