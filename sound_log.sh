@@ -23,17 +23,17 @@ export AUDIDEV=hw:1,0
 
 echo "[init]: initiate record 30 minutes of audio" >> $LOG
 #Records 30 min of audio
-rec -c 2 -r 44800 -b 16 /home/pi/Audio/Wav/${FILENAME}.wav bandpass 720 600 highpass 120 gain 20 trim 2 32
+rec -c 2 -r 44100 -b 16 /home/pi/home/pi/Audio/Wav/${FILENAME}.wav gain 32 trim 2 32
 echo "[return]: 30 minutes of audio finished recording" >> $LOG
 
 #converts from .wav to .mp3
 echo "[init]: begin .wav to .mp3 conversion" >> $LOG
-sudo lame -b 64 /home/pi/Audio/Wav/${FILENAME}.wav /home/pi/Audio/Upload/${FILENAME}.mp3
+sudo lame -b 128 /home/pi/home/pi/Audio/Wav/${FILENAME}.wav /home/pi/home/pi/Audio/Upload/${FILENAME}.mp3
 echo "[return]: conversion complete" >> $LOG
 
 #deletes .wav file
 echo "[init]: attempt to delete .wav file" >> $LOG
-sudo rm /home/pi/Audio/Wav/${FILENAME}.wav
+sudo rm /home/pi/home/pi/Audio/Wav/${FILENAME}.wav
 echo "[return]: rm cmd completed" >> $LOG
 
 #cellular on
@@ -48,7 +48,7 @@ echo "[return] sleep completed" >> $LOG
 
 #upload to s3 (need to update file paths)
 echo "[init] upload to s3" >> $LOG
-sudo s3cmd put --reduced-redundancy --acl-public /home/pi/Audio/Upload/${FILENAME}.mp3 s3://soundscocoa/${FILENAME}.mp3
+sudo s3cmd put --reduced-redundancy --acl-public /home/pi/home/pi/Audio/Upload/${FILENAME}.mp3 s3://soundscocoa/${FILENAME}.mp3
 echo "[return] upload cmd complete" >> $LOG
 
 #cellular off
@@ -68,7 +68,7 @@ echo "[return] cellular off" >> $LOG
 echo "[status] move mp3 from internal storage to usb drive" >> $LOG
 sudo echo '1-1' | sudo tee /sys/bus/usb/drivers/usb/bind
 echo "[init] mv command from local storage to USB"
-sudo mv /home/pi/Audio/Upload/${FILENAME}.mp3 /media/usb0
+sudo mv /home/pi/home/pi/Audio/Upload/${FILENAME}.mp3 /media/usb0
 sudo echo '1-1' | sudo tee /sys/bus/usb/drivers/usb/unbind
 echo "[return] file move complete" >> $LOG
 echo "[status] bash script complete" >> $LOG
