@@ -1,4 +1,7 @@
 #!/bin/bash
+
+### Baseline sound.sh script
+
 FILENAME=$(date +"%Y%m%d_%H%M")
 
 #Executed by Crontab 30min before sunrise

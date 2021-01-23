@@ -16,3 +16,5 @@ echo "[status] turn cellular off" >> $LOG
 echo "[status] grep cellular process ID" >> $LOG
 CELLULAR=$(pgrep chrome)
 echo "cellular pid = $CELLULAR" >> $LOG
+
+echo "program complete"
